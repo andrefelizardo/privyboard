@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function LoginContainer() {
   const router = useRouter();
-  const { ready, authenticated, logout } = usePrivy();
+  const { ready, authenticated } = usePrivy();
   const { login } = useLogin({
     onComplete: () => {
       router.push("/dashboard");
@@ -14,28 +14,34 @@ export default function LoginContainer() {
   });
 
   const disableLogin = !ready || (ready && authenticated);
-  const disableLogout = !ready || (ready && !authenticated);
 
   return (
-    <div className="flex flex-col gap-4 items-center">
-      <h1 className="text-3xl">PrivyBoard</h1>
-      <Button
-        disabled={disableLogin}
-        variant="outline"
-        className="text-1xl mt-2"
-        onClick={() =>
-          login({
-            loginMethods: ["wallet"],
-            walletChainType: "ethereum-and-solana",
-            disableSignup: false,
-          })
-        }
+    <Button
+      disabled={disableLogin}
+      className="text-1xl mt-2 w-full p-8 text-left flex justify-between cursor-pointer"
+      onClick={() =>
+        login({
+          loginMethods: ["wallet"],
+          walletChainType: "ethereum-and-solana",
+          disableSignup: false,
+        })
+      }
+    >
+      <span>Enter now</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-6 h-6"
       >
-        Login
-      </Button>
-      <Button disabled={disableLogout} onClick={logout}>
-        Logout
-      </Button>
-    </div>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M8.25 4.5l7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </Button>
   );
 }
