@@ -1,4 +1,5 @@
 import LoginContainer from "@/components/Login";
+import PrivyBoardLogo from "@/components/PrivyBoardLogo";
 import Image from "next/image";
 
 export default function Home() {
@@ -12,13 +13,7 @@ export default function Home() {
         alt="PrivyBoard concept"
       />
       <div className="relative z-10 gap-2 lg:gap-4 flex flex-col p-6 lg:p-12 w-full md:max-w-[60%]">
-        <Image
-          width={270}
-          height={270}
-          src="/PrivyBoard-logo-full-white.png"
-          sizes="(max-width: 720px) 100px, 100px"
-          alt="PrivyBoard"
-        />
+        <PrivyBoardLogo />
         <h2 className="text-6xl lg:text-[125px] font-semibold leading-none">
           Track,
           <br />
