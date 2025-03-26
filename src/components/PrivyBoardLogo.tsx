@@ -6,6 +6,7 @@ export default function PrivyBoardLogo() {
       width={270}
       height={270}
       src="/PrivyBoard-logo-full-white.png"
+      quality={100}
       sizes="(max-width: 720px) 100px, 100px"
       alt="PrivyBoard"
     />
