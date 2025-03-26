@@ -92,38 +92,6 @@ export default function AssetCardsList() {
           loading={isPending}
         />
       ))}
-      {/* <AssetCard
-        logo="https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579"
-        symbol="BTC"
-        name="Bitcoin"
-        tokenBalance={0.1}
-        price={40000}
-        loading={isPending}
-      />
-      <AssetCard
-        logo="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880"
-        symbol="ETH"
-        name="Ethereum"
-        tokenBalance={1}
-        price={2500}
-        loading={isPending}
-      />
-      <AssetCard
-        logo="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880"
-        symbol="ETH"
-        name="Ethereum"
-        tokenBalance={1}
-        price={2500}
-        loading={isPending}
-      />
-      <AssetCard
-        logo="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880"
-        symbol="ETH"
-        name="Ethereum"
-        tokenBalance={1}
-        price={2500}
-        loading={isPending}
-      /> */}
     </div>
   );
 }
