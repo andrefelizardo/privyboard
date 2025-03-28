@@ -19,7 +19,7 @@ export default function AssetCard({
   price,
   loading,
 }: AssetCardProps) {
-  const beautyPrice = price == 0 ? " <0.01" : price;
+  const beautyPrice = price == 0 ? " 0.01" : price.toFixed(2);
 
   return (
     <Card className="max-w-[215px] w-full">
@@ -46,7 +46,7 @@ export default function AssetCard({
             <Skeleton className="w-24 h-6" />
           ) : (
             <p className="text-lg text-gray-500 pt-2">
-              {tokenBalance} {symbol}
+              {parseFloat(tokenBalance).toFixed(4)} {symbol}
             </p>
           )}
         </div>

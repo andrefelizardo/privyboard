@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import AssetCard from "./AssetCard";
 import { usePrivy } from "@privy-io/react-auth";
-import { FormattedTokenData } from "@/lib/alchemy/formatTokenData";
+import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
 
 export default function AssetCardsList() {
   const { user } = usePrivy();
@@ -28,6 +28,7 @@ export default function AssetCardsList() {
       }
       return response.json();
     },
+    refetchOnWindowFocus: false,
     enabled: !!user?.wallet?.address,
   });
 
@@ -75,20 +76,20 @@ export default function AssetCardsList() {
     return <div>Error fetching data: {error.message}</div>;
   }
 
-  if (data.tokens?.length === 0) {
+  if (data.tokens.length === 0) {
     return <div>No assets found</div>;
   }
 
   return (
     <div className="grid grid-cols-1 gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {data.tokens.map((token: FormattedTokenData) => (
+      {data.tokens.map((token: FormattedTokenBalancePrice) => (
         <AssetCard
-          key={token.address}
+          key={token.address + token.symbol}
           logo={token.logo}
           symbol={token.symbol}
           name={token.name}
-          tokenBalance={token.tokenBalance}
-          price={token.price}
+          tokenBalance={token.balance}
+          price={token.usd_value}
           loading={isPending}
         />
       ))}
