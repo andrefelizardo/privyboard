@@ -67,6 +67,38 @@ export default function AssetCardsList() {
           price={0}
           loading={isPending}
         />
+        <AssetCard
+          logo="--"
+          symbol="--"
+          name="--"
+          tokenBalance={"--"}
+          price={0}
+          loading={isPending}
+        />
+        <AssetCard
+          logo="--"
+          symbol="--"
+          name="--"
+          tokenBalance={"--"}
+          price={0}
+          loading={isPending}
+        />
+        <AssetCard
+          logo="--"
+          symbol="--"
+          name="--"
+          tokenBalance={"--"}
+          price={0}
+          loading={isPending}
+        />
+        <AssetCard
+          logo="--"
+          symbol="--"
+          name="--"
+          tokenBalance={"--"}
+          price={0}
+          loading={isPending}
+        />
       </div>
     );
   }

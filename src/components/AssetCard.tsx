@@ -26,7 +26,7 @@ export default function AssetCard({
       <CardContent className="px-4 flex flex-col justify-between items-center ">
         <div className="flex items-center space-x-4 w-full">
           {loading ? (
-            <Skeleton />
+            <Skeleton className="w-12 h-12 rounded-full" />
           ) : (
             <img src={logo} alt={symbol} className="w-12 h-12" />
           )}
@@ -43,7 +43,7 @@ export default function AssetCard({
             <p className="text-3xl">$ {beautyPrice}</p>
           )}
           {loading ? (
-            <Skeleton className="w-24 h-6" />
+            <Skeleton className="w-24 h-6 mt-2" />
           ) : (
             <p className="text-lg text-gray-500 pt-2">
               {parseFloat(tokenBalance).toFixed(4)} {symbol}
