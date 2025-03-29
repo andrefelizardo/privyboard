@@ -52,6 +52,10 @@ export async function POST(request: NextRequest): Promise<Response> {
     const results = await Promise.all(promises);
     const tokens = results.flat();
 
+    tokens.sort((a, b) => {
+      return b.usd_value - a.usd_value;
+    });
+
     return new Response(
       JSON.stringify({
         tokens,
