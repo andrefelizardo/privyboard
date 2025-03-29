@@ -8,11 +8,11 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <header className="flex justify-between items-center px-16 py-4">
+      <header className="flex justify-between items-center px-4 lg:px-16 py-4">
         <PrivyBoardLogo />
         <LoggedMenu />
       </header>
-      <main className="px-16">{children}</main>
+      <main className="px-4 lg:px-16">{children}</main>
     </>
   );
 }

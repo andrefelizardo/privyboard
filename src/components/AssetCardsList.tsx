@@ -48,7 +48,7 @@ export default function AssetCardsList() {
 
   if (isPending) {
     return (
-      <div className="grid grid-cols-1 gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <>
         <LoadingAssetCard />
         <LoadingAssetCard />
         <LoadingAssetCard />
@@ -57,7 +57,7 @@ export default function AssetCardsList() {
         <LoadingAssetCard />
         <LoadingAssetCard />
         <LoadingAssetCard />
-      </div>
+      </>
     );
   }
 
@@ -71,7 +71,7 @@ export default function AssetCardsList() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <>
       {data.tokens.map((token: FormattedTokenBalancePrice) => (
         <AssetCard
           key={token.address + token.symbol}
@@ -84,6 +84,6 @@ export default function AssetCardsList() {
           loading={isPending}
         />
       ))}
-    </div>
+    </>
   );
 }
