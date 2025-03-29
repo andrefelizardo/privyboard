@@ -30,7 +30,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
     }
 
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         {
           address: walletAddress,
           chain: network.chain,
-        },
+        }
       );
 
       return formatTokenBalancesPrice(response.result, network.name);
@@ -51,6 +51,10 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const results = await Promise.all(promises);
     const tokens = results.flat();
+
+    tokens.sort((a, b) => {
+      return b.usd_value - a.usd_value;
+    });
 
     return new Response(
       JSON.stringify({
@@ -61,7 +65,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           "Content-Type": "application/json",
         },
         status: 200,
-      },
+      }
     );
   } catch (error) {
     console.error("Error in API:", error);
