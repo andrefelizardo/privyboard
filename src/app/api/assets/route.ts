@@ -30,7 +30,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
     }
 
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         {
           address: walletAddress,
           chain: network.chain,
-        }
+        },
       );
 
       return formatTokenBalancesPrice(response.result, network.name);
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           "Content-Type": "application/json",
         },
         status: 200,
-      }
+      },
     );
   } catch (error) {
     console.error("Error in API:", error);
