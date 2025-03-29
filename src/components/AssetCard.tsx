@@ -38,9 +38,9 @@ export default function AssetCard({
       <TrendingDown />
     ) : null;
   return (
-    <Card className="max-w-[215px] w-full">
+    <Card className="md:max-w-[215px] w-full">
       <CardContent className="px-4 flex flex-col justify-between items-center h-full">
-        <div className="flex items-center space-x-4 w-full">
+        <div className="flex items-center space-x-4 sm:w-full">
           {loading ? (
             <Skeleton className="w-12 h-12 rounded-full" />
           ) : (
