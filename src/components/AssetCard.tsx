@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { TrendingDown, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 
@@ -9,6 +10,7 @@ interface AssetCardProps {
   tokenBalance: string;
   price: number;
   loading: boolean;
+  priceChange: number;
 }
 
 export default function AssetCard({
@@ -18,12 +20,17 @@ export default function AssetCard({
   tokenBalance,
   price,
   loading,
+  priceChange,
 }: AssetCardProps) {
   const beautyPrice = price == 0 ? " 0.01" : price.toFixed(2);
+  const priceChangeColor = priceChange >= 0 ? "text-green-500" : "text-red-500";
+  const priceChangeSign = priceChange > 0 ? "+" : "";
+  const priceChangePercent = priceChange.toFixed(2) + "%";
+  const priceChangeIcon = priceChange >= 0 ? <TrendingUp /> : <TrendingDown />;
 
   return (
     <Card className="max-w-[215px] w-full">
-      <CardContent className="px-4 flex flex-col justify-between items-center ">
+      <CardContent className="px-4 flex flex-col justify-between items-center h-full">
         <div className="flex items-center space-x-4 w-full">
           {loading ? (
             <Skeleton className="w-12 h-12 rounded-full" />
@@ -36,7 +43,7 @@ export default function AssetCard({
             <h3 className="text-1xl">{name + " | " + symbol}</h3>
           )}
         </div>
-        <div className="py-8 text-center">
+        <div className="mt-4 mb-4 text-center">
           {loading ? (
             <Skeleton className="w-24 h-6" />
           ) : (
@@ -50,6 +57,16 @@ export default function AssetCard({
             </p>
           )}
         </div>
+        {loading ? (
+          <Skeleton className="w-24 h-6" />
+        ) : (
+          <p className={`flex items-center gap-2 text-lg ${priceChangeColor}`}>
+            {priceChangeIcon}{" "}
+            <span>
+              {priceChangeSign} {priceChangePercent}
+            </span>
+          </p>
+        )}
       </CardContent>
     </Card>
   );

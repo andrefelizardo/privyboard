@@ -5,6 +5,20 @@ import AssetCard from "./AssetCard";
 import { usePrivy } from "@privy-io/react-auth";
 import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
 
+function MockedCard() {
+  return (
+    <AssetCard
+      logo="--"
+      symbol="--"
+      name="--"
+      tokenBalance={"--"}
+      price={0}
+      loading={true}
+      priceChange={0}
+    />
+  );
+}
+
 export default function AssetCardsList() {
   const { user } = usePrivy();
 
@@ -35,70 +49,14 @@ export default function AssetCardsList() {
   if (isPending) {
     return (
       <div className="grid grid-cols-1 gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
-        <AssetCard
-          logo="--"
-          symbol="--"
-          name="--"
-          tokenBalance={"--"}
-          price={0}
-          loading={isPending}
-        />
+        <MockedCard />
+        <MockedCard />
+        <MockedCard />
+        <MockedCard />
+        <MockedCard />
+        <MockedCard />
+        <MockedCard />
+        <MockedCard />
       </div>
     );
   }
@@ -122,6 +80,7 @@ export default function AssetCardsList() {
           name={token.name}
           tokenBalance={token.balance}
           price={token.usd_value}
+          priceChange={token.usd_price_24hr_percent_change}
           loading={isPending}
         />
       ))}
