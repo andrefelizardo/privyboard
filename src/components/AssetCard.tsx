@@ -23,10 +23,20 @@ export default function AssetCard({
   priceChange,
 }: AssetCardProps) {
   const beautyPrice = price == 0 ? " 0.01" : price.toFixed(2);
-  const priceChangeColor = priceChange > 0 ? "text-green-500" : priceChange < 0 ? "text-red-500" : "text-gray-500";
+  const priceChangeColor =
+    priceChange > 0
+      ? "text-green-500"
+      : priceChange < 0
+        ? "text-red-500"
+        : "text-gray-500";
   const priceChangeSign = priceChange > 0 ? "+" : "";
   const priceChangePercent = priceChange.toFixed(2) + "%";
-  const priceChangeIcon = priceChange > 0 ? <TrendingUp /> : priceChange < 0 ? <TrendingDown /> : null;
+  const priceChangeIcon =
+    priceChange > 0 ? (
+      <TrendingUp />
+    ) : priceChange < 0 ? (
+      <TrendingDown />
+    ) : null;
   return (
     <Card className="max-w-[215px] w-full">
       <CardContent className="px-4 flex flex-col justify-between items-center h-full">

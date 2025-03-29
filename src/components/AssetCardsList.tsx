@@ -5,7 +5,7 @@ import AssetCard from "./AssetCard";
 import { usePrivy } from "@privy-io/react-auth";
 import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
 
-function MockedCard() {
+function LoadingAssetCard() {
   return (
     <AssetCard
       logo="--"
@@ -49,14 +49,14 @@ export default function AssetCardsList() {
   if (isPending) {
     return (
       <div className="grid grid-cols-1 gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <MockedCard />
-        <MockedCard />
-        <MockedCard />
-        <MockedCard />
-        <MockedCard />
-        <MockedCard />
-        <MockedCard />
-        <MockedCard />
+        <LoadingAssetCard />
+        <LoadingAssetCard />
+        <LoadingAssetCard />
+        <LoadingAssetCard />
+        <LoadingAssetCard />
+        <LoadingAssetCard />
+        <LoadingAssetCard />
+        <LoadingAssetCard />
       </div>
     );
   }
