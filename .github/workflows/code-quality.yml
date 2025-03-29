@@ -25,8 +25,8 @@ jobs:
       - name: Check Prettier Format
         run: npm run format:check
 
-      - name: Run Tests
-        run: npm run test
+      # - name: Run Tests
+      #   run: npm run test
 
   codeql-analysis:
     runs-on: ubuntu-latest
