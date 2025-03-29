@@ -74,6 +74,7 @@ export default function AssetCard({
             <span>
               {priceChangeSign} {priceChangePercent}
             </span>
+            <span className="text-xs text-gray-500">(24h)</span>
           </p>
         )}
       </CardContent>
