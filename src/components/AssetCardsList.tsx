@@ -30,10 +30,7 @@ export default function AssetCardsList() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          walletAddress: "0xF5b4172C5a42418971130c5e24743355f1d4043C",
-        }),
-        // body: JSON.stringify({ walletAddress:  user?.wallet?.address }),
+        body: JSON.stringify({ walletAddress: user?.wallet?.address }),
       });
 
       if (!response.ok) {

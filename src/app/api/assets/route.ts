@@ -30,20 +30,24 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
     }
 
-    await Moralis.start({
-      apiKey: process.env.MORALIS_API_KEY,
-    });
+    try {
+      await Moralis.start({
+        apiKey: process.env.MORALIS_API_KEY,
+      });
+    } catch (error) {
+      console.error("Error starting Moralis:", error);
+    }
 
     const promises = NETWORKS.map(async (network) => {
       const response = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice(
         {
           address: walletAddress,
           chain: network.chain,
-        },
+        }
       );
 
       return formatTokenBalancesPrice(response.result, network.name);
@@ -65,7 +69,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           "Content-Type": "application/json",
         },
         status: 200,
-      },
+      }
     );
   } catch (error) {
     console.error("Error in API:", error);
