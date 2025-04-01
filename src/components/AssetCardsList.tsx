@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import AssetCard from "./AssetCard";
 import { usePrivy } from "@privy-io/react-auth";
 import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
+import { useWalletStore } from "@/lib/store/useWalletStore";
 
 function LoadingAssetCard() {
   return (
@@ -21,6 +22,7 @@ function LoadingAssetCard() {
 
 export default function AssetCardsList() {
   const { user } = usePrivy();
+  const wallets = useWalletStore((state) => state.wallets);
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["my-assets"],
@@ -30,7 +32,7 @@ export default function AssetCardsList() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ walletAddress: user?.wallet?.address }),
+        body: JSON.stringify({ wallets: wallets }),
       });
 
       if (!response.ok) {
@@ -40,7 +42,7 @@ export default function AssetCardsList() {
       return response.json();
     },
     refetchOnWindowFocus: false,
-    enabled: !!user?.wallet?.address,
+    enabled: !!user?.wallet?.address && wallets.length > 0,
   });
 
   if (isPending) {

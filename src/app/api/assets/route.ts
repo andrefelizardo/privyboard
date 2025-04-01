@@ -2,8 +2,13 @@ import { formatTokenBalancesPrice } from "@/lib/moralis/formatTokenBalancesPrice
 import Moralis from "moralis";
 import { EvmChain } from "@moralisweb3/common-evm-utils";
 import { NextRequest } from "next/server";
+import { Tables } from "../../../../database.types";
 
-const NETWORKS = [
+export interface AssetsRequestBody {
+  wallets: Tables<"wallets">[];
+}
+
+const EVM_NETWORKS = [
   {
     name: "polygon",
     chain: EvmChain.POLYGON,
@@ -20,9 +25,9 @@ const NETWORKS = [
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const body = (await request.json()) as { walletAddress: string };
-    const walletAddress = body.walletAddress;
-    if (!walletAddress) {
+    const body = (await request.json()) as AssetsRequestBody;
+    const wallets = body.wallets;
+    if (!wallets || wallets.length === 0) {
       return new Response(
         JSON.stringify({ error: "Wallet address is required" }),
         {
@@ -42,19 +47,15 @@ export async function POST(request: NextRequest): Promise<Response> {
       console.error("Error starting Moralis:", error);
     }
 
-    const promises = NETWORKS.map(async (network) => {
-      const response = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice(
-        {
-          address: walletAddress,
-          chain: network.chain,
-        }
-      );
+    const evmWallets = wallets.filter(
+      (wallet) => wallet.chain?.toLowerCase() === "ethereum"
+    );
 
-      return formatTokenBalancesPrice(response.result, network.name);
-    });
-
-    const results = await Promise.all(promises);
-    const tokens = results.flat();
+    const tokensPromises = evmWallets.map((wallet) =>
+      fetchTokensForEVMAddress(wallet.wallet_address as string)
+    );
+    const tokensNested = await Promise.all(tokensPromises);
+    const tokens = tokensNested.flat();
 
     tokens.sort((a, b) => {
       return b.usd_value - a.usd_value;
@@ -77,4 +78,33 @@ export async function POST(request: NextRequest): Promise<Response> {
       status: 500,
     });
   }
+}
+
+async function fetchEVMTokensForAddress(
+  address: string,
+  network: { name: string; chain: EvmChain }
+): Promise<any[]> {
+  try {
+    const response = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
+      address: address as string,
+      chain: network.chain,
+    });
+
+    const tokens = formatTokenBalancesPrice(response.result, network.name);
+    return tokens.map((token) => ({ ...token, wallet_address: address }));
+  } catch (error) {
+    console.error(
+      `Error fetching tokens for ${address} on ${network.name}:`,
+      error
+    );
+    return [];
+  }
+}
+
+async function fetchTokensForEVMAddress(address: string): Promise<any[]> {
+  const promises = EVM_NETWORKS.map((network) =>
+    fetchEVMTokensForAddress(address, network)
+  );
+  const results = await Promise.all(promises);
+  return results.flat();
 }
