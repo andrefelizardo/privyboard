@@ -1,18 +1,21 @@
 "use client";
 
-import { useLogin, usePrivy, User } from "@privy-io/react-auth";
+import { useLogin, usePrivy } from "@privy-io/react-auth";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useWalletStore } from "@/lib/store/useWalletStore";
 
 export default function LoginContainer() {
   const router = useRouter();
   const { ready, authenticated, user } = usePrivy();
   const [allowCreate, setAllowCreate] = useState(false);
 
+  const setWallets = useWalletStore((state) => state.setWallets);
+
   const { login } = useLogin({
-    onComplete: (user: User | null) => {
+    onComplete: (user) => {
       if (user && !user.isNewUser) {
         router.push("/dashboard");
       }
@@ -23,17 +26,17 @@ export default function LoginContainer() {
     },
   });
 
-  const { isPending } = useQuery({
-    queryKey: ["create-user"],
+  const { isPending, isSuccess, data } = useQuery({
+    queryKey: ["create-user", user?.id],
     queryFn: async () => {
-      const response = await fetch("/api/user/create", {
+      const response = await fetch("/api/users/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          walletAddress: user.wallet?.address,
-          id: user.id,
+          walletAddress: user?.wallet?.address,
+          id: user?.id,
         }),
       });
 
@@ -41,12 +44,20 @@ export default function LoginContainer() {
         const errorData = await response.json();
         throw new Error(errorData.error || "Bad Request");
       }
-      router.push("/dashboard");
+
       return response.json();
     },
     refetchOnWindowFocus: false,
-    enabled: allowCreate && user.isNewUser,
+    enabled: allowCreate && !!user,
   });
+
+  useEffect(() => {
+    if (isSuccess && data && data.wallets) {
+      setWallets(data.wallets);
+      setAllowCreate(false);
+      router.push("/dashboard");
+    }
+  }, [isSuccess, data, router, setWallets]);
 
   const disableLogin =
     !ready || (ready && authenticated) || (isPending && allowCreate);

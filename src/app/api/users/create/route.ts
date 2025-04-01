@@ -58,12 +58,16 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     if (data && walletData) {
-      return new Response(JSON.stringify({ success: true }), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      console.log(walletData);
+      return new Response(
+        JSON.stringify({ success: true, wallets: walletData }),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     }
   } catch {
     return new Response(JSON.stringify({ error: "Internal server error" }), {
