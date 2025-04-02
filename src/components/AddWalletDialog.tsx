@@ -13,19 +13,48 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function AddWalletDialog() {
   const addWallet = useWalletStore((state) => state.addWallet);
   const [walletAddress, setWalletAddress] = useState("");
+  const [create, setCreate] = useState(false);
   const isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(walletAddress);
+  const { user } = usePrivy();
 
-  function handleAddWallet() {
-    //TODO: call API to add new wallet on database
-    // [ ] Add wallet to database
-    // [ ] Add wallet to store
-    // [ ] refetch assets
-  }
+  const { data, isSuccess } = useQuery({
+    queryKey: ["add-wallet", user?.id, walletAddress],
+    queryFn: async () => {
+      const response = await fetch("/api/wallets", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          wallet: walletAddress,
+          user_id: user?.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Bad Request");
+      }
+
+      return response.json();
+    },
+    refetchOnWindowFocus: false,
+    enabled: create && !!user?.id && isValidAddress,
+  });
+
+  useEffect(() => {
+    if (isSuccess && data && data.wallet) {
+      addWallet(data.wallet);
+      setWalletAddress("");
+    }
+  }, [addWallet, data, isSuccess]);
 
   return (
     <Dialog>
@@ -58,7 +87,7 @@ export default function AddWalletDialog() {
           <Button
             type="submit"
             disabled={!isValidAddress}
-            onClick={() => addWallet}
+            onClick={() => setCreate(true)}
           >
             Add
           </Button>

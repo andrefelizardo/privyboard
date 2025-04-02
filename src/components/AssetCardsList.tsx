@@ -25,7 +25,7 @@ export default function AssetCardsList() {
   const wallets = useWalletStore((state) => state.wallets);
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ["my-assets"],
+    queryKey: ["my-assets", wallets.map((w) => w.wallet_address)],
     queryFn: async () => {
       const response = await fetch(`/api/assets`, {
         method: "POST",
