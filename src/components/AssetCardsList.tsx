@@ -6,6 +6,8 @@ import { usePrivy } from "@privy-io/react-auth";
 import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
 import { useWalletStore } from "@/lib/store/useWalletStore";
 
+const PrivyBoardLogoPath = "/privy-logo.png";
+
 function LoadingAssetCard() {
   return (
     <AssetCard
@@ -15,7 +17,7 @@ function LoadingAssetCard() {
       tokenBalance={"--"}
       price={0}
       loading={true}
-      priceChange={0}
+      priceChange={"0"}
     />
   );
 }
@@ -74,7 +76,7 @@ export default function AssetCardsList() {
       {data.tokens.map((token: FormattedTokenBalancePrice) => (
         <AssetCard
           key={token.address + token.symbol}
-          logo={token.logo}
+          logo={token.logo || PrivyBoardLogoPath}
           symbol={token.symbol}
           name={token.name}
           tokenBalance={token.balance}
