@@ -59,11 +59,12 @@ export default function LoginContainer() {
     }
   }, [isSuccess, data, router, setWallets]);
 
-  if (isError) {
-    console.error("Error fetching user data:");
-    setAllowCreate(false);
-  }
-
+  useEffect(() => {
+    if (isError) {
+      console.error("Error fetching user data:");
+      setAllowCreate(false);
+    }
+  }, [isError]);
   const disableLogin =
     !ready || (ready && authenticated) || (isPending && allowCreate);
 
