@@ -57,13 +57,15 @@ export async function POST(request: NextRequest): Promise<Response> {
     const tokensNested = await Promise.all(tokensPromises);
     const tokens = tokensNested.flat();
 
-    tokens.sort((a, b) => {
+    const mergedTokens = mergeTokens(tokens);
+
+    mergedTokens.sort((a, b) => {
       return b.usd_value - a.usd_value;
     });
 
     return new Response(
       JSON.stringify({
-        tokens,
+        tokens: mergedTokens,
       }),
       {
         headers: {
@@ -107,4 +109,25 @@ async function fetchTokensForEVMAddress(address: string): Promise<any[]> {
   );
   const results = await Promise.all(promises);
   return results.flat();
+}
+
+function mergeTokens(tokens: any[]): any[] {
+  const merged = tokens.reduce(
+    (acc, token) => {
+      const key = token.symbol;
+      if (!acc[key]) {
+        acc[key] = { ...token };
+      } else {
+        acc[key].usd_value += token.usd_value;
+
+        const currentBalance = parseFloat(acc[key].balance);
+        const newBalance = parseFloat(token.balance);
+        acc[key].balance = (currentBalance + newBalance).toFixed(4);
+      }
+      return acc;
+    },
+    {} as { [key: string]: any }
+  );
+
+  return Object.values(merged);
 }

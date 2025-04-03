@@ -21,6 +21,7 @@ export default function AddWalletDialog() {
   const addWallet = useWalletStore((state) => state.addWallet);
   const [walletAddress, setWalletAddress] = useState("");
   const [create, setCreate] = useState(false);
+  const [open, setOpen] = useState(false);
   const isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(walletAddress);
   const { user } = usePrivy();
 
@@ -53,13 +54,18 @@ export default function AddWalletDialog() {
     if (isSuccess && data && data.wallet) {
       addWallet(data.wallet);
       setWalletAddress("");
+      setOpen(false);
     }
   }, [addWallet, data, isSuccess]);
 
   return (
-    <Dialog>
+    <Dialog open={open}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-1xl">
+        <Button
+          variant="outline"
+          className="text-1xl"
+          onClick={() => setOpen(true)}
+        >
           + Add wallet
         </Button>
       </DialogTrigger>
