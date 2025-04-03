@@ -26,7 +26,7 @@ export default function LoginContainer() {
     },
   });
 
-  const { isPending, isSuccess, data } = useQuery({
+  const { isPending, isSuccess, data, isError } = useQuery({
     queryKey: ["create-user", user?.id],
     queryFn: async () => {
       const response = await fetch("/api/users/create", {
@@ -58,6 +58,11 @@ export default function LoginContainer() {
       router.push("/dashboard");
     }
   }, [isSuccess, data, router, setWallets]);
+
+  if (isError) {
+    console.error("Error fetching user data:");
+    setAllowCreate(false);
+  }
 
   const disableLogin =
     !ready || (ready && authenticated) || (isPending && allowCreate);
