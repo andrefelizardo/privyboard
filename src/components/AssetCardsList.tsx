@@ -4,6 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import AssetCard from "./AssetCard";
 import { usePrivy } from "@privy-io/react-auth";
 import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
+import { useWalletStore } from "@/lib/store/useWalletStore";
+
+const PrivyBoardLogoPath = "/privy-logo.png";
 
 function LoadingAssetCard() {
   return (
@@ -14,26 +17,24 @@ function LoadingAssetCard() {
       tokenBalance={"--"}
       price={0}
       loading={true}
-      priceChange={0}
+      priceChange={"0"}
     />
   );
 }
 
 export default function AssetCardsList() {
   const { user } = usePrivy();
+  const wallets = useWalletStore((state) => state.wallets);
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ["my-assets"],
+    queryKey: ["my-assets", wallets.map((w) => w.wallet_address)],
     queryFn: async () => {
       const response = await fetch(`/api/assets`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          walletAddress: "0xF5b4172C5a42418971130c5e24743355f1d4043C",
-        }),
-        // body: JSON.stringify({ walletAddress:  user?.wallet?.address }),
+        body: JSON.stringify({ wallets: wallets }),
       });
 
       if (!response.ok) {
@@ -43,7 +44,7 @@ export default function AssetCardsList() {
       return response.json();
     },
     refetchOnWindowFocus: false,
-    enabled: !!user?.wallet?.address,
+    enabled: !!user?.wallet?.address && wallets.length > 0,
   });
 
   if (isPending) {
@@ -75,7 +76,7 @@ export default function AssetCardsList() {
       {data.tokens.map((token: FormattedTokenBalancePrice) => (
         <AssetCard
           key={token.address + token.symbol}
-          logo={token.logo}
+          logo={token.logo || PrivyBoardLogoPath}
           symbol={token.symbol}
           name={token.name}
           tokenBalance={token.balance}

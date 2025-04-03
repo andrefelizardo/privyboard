@@ -10,7 +10,7 @@ interface AssetCardProps {
   tokenBalance: string;
   price: number;
   loading: boolean;
-  priceChange: number;
+  priceChange: string;
 }
 
 export default function AssetCard({
@@ -23,18 +23,19 @@ export default function AssetCard({
   priceChange,
 }: AssetCardProps) {
   const beautyPrice = price == 0 ? " 0.01" : price.toFixed(2);
+  const priceChangeNumber = parseFloat(priceChange);
   const priceChangeColor =
-    priceChange > 0
+    priceChangeNumber > 0
       ? "text-green-500"
-      : priceChange < 0
+      : priceChangeNumber < 0
         ? "text-red-500"
         : "text-gray-500";
-  const priceChangeSign = priceChange > 0 ? "+" : "";
-  const priceChangePercent = priceChange.toFixed(2) + "%";
+  const priceChangeSign = priceChangeNumber > 0 ? "+" : "";
+  const priceChangePercent = priceChangeNumber.toFixed(2) + "%";
   const priceChangeIcon =
-    priceChange > 0 ? (
+    priceChangeNumber > 0 ? (
       <TrendingUp />
-    ) : priceChange < 0 ? (
+    ) : priceChangeNumber < 0 ? (
       <TrendingDown />
     ) : null;
   return (

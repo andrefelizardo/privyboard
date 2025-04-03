@@ -8,8 +8,7 @@ export default function Home() {
       <Image
         src="/landing.png"
         fill
-        objectFit="cover"
-        style={{ filter: "opacity(0.5)" }}
+        style={{ filter: "opacity(0.5)", objectFit: "cover" }}
         alt="PrivyBoard concept"
       />
       <div className="relative z-10 gap-2 lg:gap-4 flex flex-col p-6 lg:p-12 w-full md:max-w-[60%]">
