@@ -18,10 +18,10 @@ export interface FormattedTokenBalancePrice {
 
 export function formatTokenBalancesPrice(
   tokens: EvmErc20TokenBalanceWithPrice[],
-  network: string
+  network: string,
 ): FormattedTokenBalancePrice[] {
   const tokensValidContracts = tokens.filter(
-    (token) => token.verifiedContract === true
+    (token) => token.verifiedContract === true,
   );
 
   return tokensValidContracts.map((token) => {

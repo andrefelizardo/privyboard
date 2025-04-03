@@ -38,7 +38,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
     }
 
@@ -51,11 +51,11 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const evmWallets = wallets.filter(
-      (wallet) => wallet.chain?.toLowerCase() === "ethereum"
+      (wallet) => wallet.chain?.toLowerCase() === "ethereum",
     );
 
     const tokensPromises = evmWallets.map((wallet) =>
-      fetchTokensForEVMAddress(wallet.wallet_address as string)
+      fetchTokensForEVMAddress(wallet.wallet_address as string),
     );
     const tokensNested = await Promise.all(tokensPromises);
     const tokens = tokensNested.flat();
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           "Content-Type": "application/json",
         },
         status: 200,
-      }
+      },
     );
   } catch (error) {
     console.error("Error in API:", error);
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 async function fetchEVMTokensForAddress(
   address: string,
-  network: { name: string; chain: EvmChain }
+  network: { name: string; chain: EvmChain },
 ): Promise<FormattedTokenBalancePrice[]> {
   try {
     const response = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
@@ -100,24 +100,24 @@ async function fetchEVMTokensForAddress(
   } catch (error) {
     console.error(
       `Error fetching tokens for ${address} on ${network.name}:`,
-      error
+      error,
     );
     return [];
   }
 }
 
 async function fetchTokensForEVMAddress(
-  address: string
+  address: string,
 ): Promise<FormattedTokenBalancePrice[]> {
   const promises = EVM_NETWORKS.map((network) =>
-    fetchEVMTokensForAddress(address, network)
+    fetchEVMTokensForAddress(address, network),
   );
   const results = await Promise.all(promises);
   return results.flat();
 }
 
 function mergeTokens(
-  tokens: FormattedTokenBalancePrice[]
+  tokens: FormattedTokenBalancePrice[],
 ): FormattedTokenBalancePrice[] {
   const merged = tokens.reduce(
     (acc, token) => {
@@ -133,7 +133,7 @@ function mergeTokens(
       }
       return acc;
     },
-    {} as { [key: string]: FormattedTokenBalancePrice }
+    {} as { [key: string]: FormattedTokenBalancePrice },
   );
 
   return Object.values(merged);

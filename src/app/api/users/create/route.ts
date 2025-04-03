@@ -13,13 +13,13 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
     }
 
     const supabase = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     const { data, error } = await supabase
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
     }
   } catch {
