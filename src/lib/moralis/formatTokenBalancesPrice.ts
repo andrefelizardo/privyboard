@@ -1,23 +1,27 @@
-import { EvmErc20TokenBalanceWithPrice } from "@moralisweb3/common-evm-utils";
+import {
+  EvmAddress,
+  EvmErc20TokenBalanceWithPrice,
+} from "@moralisweb3/common-evm-utils";
 
 export interface FormattedTokenBalancePrice {
   network: string;
-  address: string;
+  address: EvmAddress | undefined;
   symbol: string;
-  logo: string;
+  logo: string | undefined;
   name: string;
-  thumbnail: string;
+  thumbnail: string | undefined;
   balance: string;
   usd_value: number;
-  usd_price_24hr_percent_change: number;
+  usd_price_24hr_percent_change: string;
+  wallet_address?: string;
 }
 
 export function formatTokenBalancesPrice(
   tokens: EvmErc20TokenBalanceWithPrice[],
-  network: string,
-) {
+  network: string
+): FormattedTokenBalancePrice[] {
   const tokensValidContracts = tokens.filter(
-    (token) => token.verifiedContract === true,
+    (token) => token.verifiedContract === true
   );
 
   return tokensValidContracts.map((token) => {

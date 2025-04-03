@@ -1,4 +1,7 @@
-import { formatTokenBalancesPrice } from "@/lib/moralis/formatTokenBalancesPrice";
+import {
+  FormattedTokenBalancePrice,
+  formatTokenBalancesPrice,
+} from "@/lib/moralis/formatTokenBalancesPrice";
 import Moralis from "moralis";
 import { EvmChain } from "@moralisweb3/common-evm-utils";
 import { NextRequest } from "next/server";
@@ -85,7 +88,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 async function fetchEVMTokensForAddress(
   address: string,
   network: { name: string; chain: EvmChain }
-): Promise<any[]> {
+): Promise<FormattedTokenBalancePrice[]> {
   try {
     const response = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
       address: address as string,
@@ -103,7 +106,9 @@ async function fetchEVMTokensForAddress(
   }
 }
 
-async function fetchTokensForEVMAddress(address: string): Promise<any[]> {
+async function fetchTokensForEVMAddress(
+  address: string
+): Promise<FormattedTokenBalancePrice[]> {
   const promises = EVM_NETWORKS.map((network) =>
     fetchEVMTokensForAddress(address, network)
   );
@@ -111,7 +116,9 @@ async function fetchTokensForEVMAddress(address: string): Promise<any[]> {
   return results.flat();
 }
 
-function mergeTokens(tokens: any[]): any[] {
+function mergeTokens(
+  tokens: FormattedTokenBalancePrice[]
+): FormattedTokenBalancePrice[] {
   const merged = tokens.reduce(
     (acc, token) => {
       const key = token.symbol;
@@ -126,7 +133,7 @@ function mergeTokens(tokens: any[]): any[] {
       }
       return acc;
     },
-    {} as { [key: string]: any }
+    {} as { [key: string]: FormattedTokenBalancePrice }
   );
 
   return Object.values(merged);
