@@ -22,13 +22,13 @@ export const useWalletStore = create<WalletState>()(
       removeWallet: (walletAddress: string) =>
         set((state) => ({
           wallets: state.wallets.filter(
-            (wallet) => wallet.wallet_address !== walletAddress
+            (wallet) => wallet.wallet_address !== walletAddress,
           ),
         })),
       resetWallets: () => set({ wallets: [] }),
     }),
     {
       name: "wallet-store",
-    }
-  )
+    },
+  ),
 );
