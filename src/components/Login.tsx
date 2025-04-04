@@ -11,13 +11,14 @@ export default function LoginContainer() {
   const router = useRouter();
   const { ready, authenticated, user } = usePrivy();
   const [allowCreate, setAllowCreate] = useState(false);
+  const [oldUser, setOldUser] = useState(false);
 
   const setWallets = useWalletStore((state) => state.setWallets);
 
   const { login } = useLogin({
     onComplete: (user) => {
       if (user && !user.isNewUser) {
-        router.push("/dashboard");
+        setOldUser(true);
       }
 
       if (user && user.isNewUser) {
@@ -25,6 +26,34 @@ export default function LoginContainer() {
       }
     },
   });
+
+  const { data: walletsData, isSuccess: walletsSuccess } = useQuery({
+    queryKey: ["wallets", user?.id],
+    queryFn: async () => {
+      const response = await fetch(`/api/wallets/get?query=${user?.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setOldUser(false);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Bad Request");
+      }
+      return response.json();
+    },
+    refetchOnWindowFocus: false,
+    enabled: oldUser && !!user?.wallet?.address,
+  });
+
+  useEffect(() => {
+    if (walletsSuccess && walletsData && walletsData.wallets) {
+      setWallets(walletsData.wallets);
+      setAllowCreate(false);
+      router.push("/dashboard");
+    }
+  }, [walletsSuccess, walletsData, router, setWallets]);
 
   const { isPending, isSuccess, data, isError } = useQuery({
     queryKey: ["create-user", user?.id],
