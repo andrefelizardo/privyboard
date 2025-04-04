@@ -7,6 +7,7 @@ export interface WalletState {
   setWallets: (wallets: Tables<"wallets">[]) => void;
   addWallet: (wallet: Tables<"wallets">) => void;
   removeWallet: (walletAddress: string) => void;
+  resetWallets: () => void;
 }
 
 export const useWalletStore = create<WalletState>()(
@@ -21,12 +22,13 @@ export const useWalletStore = create<WalletState>()(
       removeWallet: (walletAddress: string) =>
         set((state) => ({
           wallets: state.wallets.filter(
-            (wallet) => wallet.wallet_address !== walletAddress,
+            (wallet) => wallet.wallet_address !== walletAddress
           ),
         })),
+      resetWallets: () => set({ wallets: [] }),
     }),
     {
       name: "wallet-store",
-    },
-  ),
+    }
+  )
 );

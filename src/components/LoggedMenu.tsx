@@ -14,10 +14,18 @@ import {
 import { ChevronDown, Copy, LogOut } from "lucide-react";
 import { formatAddress } from "@/lib/formatAddress";
 import { toast } from "sonner";
+import { useWalletStore } from "@/lib/store/useWalletStore";
 
 export default function LoggedMenu() {
   const router = useRouter();
-  const { logout } = useLogout({ onSuccess: () => router.push("/") });
+  const resetWallets = useWalletStore((state) => state.resetWallets);
+
+  const { logout } = useLogout({
+    onSuccess: () => {
+      resetWallets();
+      router.push("/");
+    },
+  });
   const { user } = usePrivy();
 
   if (!user) {
