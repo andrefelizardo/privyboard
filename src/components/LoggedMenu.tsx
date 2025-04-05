@@ -11,7 +11,13 @@ import {
   DropdownMenuGroup,
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
-import { ChevronDown, Copy, LogOut } from "lucide-react";
+import {
+  ChevronDown,
+  Copy,
+  LayoutDashboard,
+  LogOut,
+  Wallet,
+} from "lucide-react";
 import { formatAddress } from "@/lib/formatAddress";
 import { toast } from "sonner";
 import { useWalletStore } from "@/lib/store/useWalletStore";
@@ -58,6 +64,24 @@ export default function LoggedMenu() {
             <Copy className="h-4 w-4" />
             <span>Copy address</span>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem
+            className="cursor-pointer flex items-between"
+            onSelect={() => router.push("/dashboard")}
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            <span>Dashboard</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer flex items-between"
+            onSelect={() => router.push("/wallets")}
+          >
+            <Wallet className="h-4 w-4" />
+            <span>Wallets</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
           <DropdownMenuItem
             className="cursor-pointer flex items-between"
             onSelect={logout}
