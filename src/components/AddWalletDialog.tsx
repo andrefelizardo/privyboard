@@ -16,14 +16,36 @@ import { Label } from "./ui/label";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { usePrivy } from "@privy-io/react-auth";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from "./ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogTitle,
+} from "@radix-ui/react-alert-dialog";
 
 export default function AddWalletDialog() {
   const addWallet = useWalletStore((state) => state.addWallet);
+  const wallets = useWalletStore((state) => state.wallets);
   const [walletAddress, setWalletAddress] = useState("");
   const [create, setCreate] = useState(false);
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState(false);
   const isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(walletAddress);
   const { user } = usePrivy();
+
+  function validateWallet() {
+    if (wallets.some((wallet) => wallet.wallet_address === walletAddress)) {
+      setError(true);
+      setWalletAddress("");
+    } else {
+      setCreate(true);
+    }
+  }
 
   const { data, isSuccess } = useQuery({
     queryKey: ["add-wallet", user?.id, walletAddress],
@@ -59,46 +81,62 @@ export default function AddWalletDialog() {
   }, [addWallet, data, isSuccess]);
 
   return (
-    <Dialog open={open}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="text-1xl"
-          onClick={() => setOpen(true)}
-        >
-          + Add wallet
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Type wallet address</DialogTitle>
-          <DialogDescription>
-            Insert a valid EVM wallet address
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Label htmlFor="wallet-address">Wallet address</Label>
-          <Input
-            id="wallet-address"
-            className="col-span-3"
-            placeholder="0x..."
-            onChange={(e) => setWalletAddress(e.target.value)}
-            value={walletAddress}
-            type="text"
-            required
-            pattern="0x[a-fA-F0-9]{40}"
-          />
-        </div>
-        <DialogFooter>
+    <>
+      <AlertDialog open={error} onOpenChange={setError}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Wallet already exists</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription>
+            This wallet address is already in your list. Please add a different
+            one.
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel>OK</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
           <Button
-            type="submit"
-            disabled={!isValidAddress}
-            onClick={() => setCreate(true)}
+            variant="outline"
+            className="text-1xl"
+            onClick={() => setOpen(true)}
           >
-            Add
+            + Add wallet
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Type wallet address</DialogTitle>
+            <DialogDescription>
+              Insert a valid EVM wallet address
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <Label htmlFor="wallet-address">Wallet address</Label>
+            <Input
+              id="wallet-address"
+              className="col-span-3"
+              placeholder="0x..."
+              onChange={(e) => setWalletAddress(e.target.value)}
+              value={walletAddress}
+              type="text"
+              required
+              pattern="0x[a-fA-F0-9]{40}"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="submit"
+              disabled={!isValidAddress}
+              onClick={validateWallet}
+            >
+              Add
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
