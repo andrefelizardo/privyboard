@@ -18,15 +18,13 @@ import { useQuery } from "@tanstack/react-query";
 import { usePrivy } from "@privy-io/react-auth";
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-} from "./ui/alert-dialog";
-import {
-  AlertDialogCancel,
   AlertDialogTitle,
-} from "@radix-ui/react-alert-dialog";
+} from "./ui/alert-dialog";
 
 export default function AddWalletDialog() {
   const addWallet = useWalletStore((state) => state.addWallet);
