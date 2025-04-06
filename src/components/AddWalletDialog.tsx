@@ -25,6 +25,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { QUERY_KEYS } from "@/constants/queryKeys";
+import { fetchAddWallet } from "@/lib/services/wallets";
 
 export default function AddWalletDialog() {
   const addWallet = useWalletStore((state) => state.addWallet);
@@ -46,26 +48,8 @@ export default function AddWalletDialog() {
   }
 
   const { data, isSuccess } = useQuery({
-    queryKey: ["add-wallet", user?.id, walletAddress],
-    queryFn: async () => {
-      const response = await fetch("/api/wallets", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          wallet: walletAddress,
-          user_id: user?.id,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Bad Request");
-      }
-
-      return response.json();
-    },
+    queryKey: QUERY_KEYS.WALLETS.ADD(user?.id as string, walletAddress),
+    queryFn: async () => fetchAddWallet(user?.id as string, walletAddress),
     refetchOnWindowFocus: false,
     enabled: create && !!user?.id && isValidAddress,
   });

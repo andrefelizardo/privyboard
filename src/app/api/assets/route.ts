@@ -65,11 +65,11 @@ export async function POST(request: NextRequest): Promise<Response> {
 
         const networkAggregation = tokens.reduce(
           (acc, token) => {
-            const network = token.network;
+            const network = token.network == "bsc" ? "binance" : token.network;
             if (!acc[network]) {
               acc[network] = 0;
             }
-            acc[network] += parseFloat(token.balance);
+            acc[network] += token.usd_value;
             return acc;
           },
           {} as Record<string, number>

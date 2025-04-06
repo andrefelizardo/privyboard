@@ -14,7 +14,7 @@ export type Database = {
           balance: number | null
           created_at: string
           id: string
-          network: string | null
+          network: Database["public"]["Enums"]["wallet_chain"] | null
           updated_at: string | null
           user_id: string | null
           wallet_address: string | null
@@ -23,7 +23,7 @@ export type Database = {
           balance?: number | null
           created_at?: string
           id?: string
-          network?: string | null
+          network?: Database["public"]["Enums"]["wallet_chain"] | null
           updated_at?: string | null
           user_id?: string | null
           wallet_address?: string | null
@@ -32,7 +32,7 @@ export type Database = {
           balance?: number | null
           created_at?: string
           id?: string
-          network?: string | null
+          network?: Database["public"]["Enums"]["wallet_chain"] | null
           updated_at?: string | null
           user_id?: string | null
           wallet_address?: string | null
