@@ -18,7 +18,7 @@ import {
   LogOut,
   Wallet,
 } from "lucide-react";
-import { formatAddress } from "@/lib/formatAddress";
+import { formatWalletAddress } from "@/lib/string";
 import { toast } from "sonner";
 import { useWalletStore } from "@/lib/store/useWalletStore";
 
@@ -48,7 +48,7 @@ export default function LoggedMenu() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="group">
           <span>
-            {formatAddress(user?.wallet?.address as string) || "wallet"}
+            {formatWalletAddress(user?.wallet?.address as string) || "wallet"}
           </span>
           <ChevronDown className="ml-2 transition-transform duration-400 group-data-[state=open]:rotate-180" />
         </Button>
