@@ -3,9 +3,9 @@ import WalletsList from "@/components/WalletsList";
 export default async function Page() {
   return (
     <>
-      <div>
+      <main>
         <WalletsList />
-      </div>
+      </main>
     </>
   );
 }
