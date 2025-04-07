@@ -27,9 +27,9 @@ export default function AssetCardsList() {
   const { user } = usePrivy();
   const wallets = useWalletStore((state) => state.wallets);
 
-  const queryClient = Client();
+  const queryClient = useQueryClient();
 
-  const { isPending, isError, data, error, isSuccess } = {
+  const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ["my-assets", wallets.map((w) => w.wallet_address)],
     queryFn: async () => {
       const response = await fetch(`/api/assets`, {
@@ -48,7 +48,7 @@ export default function AssetCardsList() {
     },
     refetchOnWindowFocus: false,
     enabled: !!user?.wallet?.address && wallets.length > 0,
-  };
+  });
 
   useEffect(() => {
     if (isSuccess) {

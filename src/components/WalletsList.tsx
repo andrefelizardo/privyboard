@@ -33,7 +33,7 @@ export default function WalletsList() {
         {data.map((wallet: Tables<"user_wallet_networks">) => (
           <div
             className="flex items-center justify-between min-h-[73px] px-6 py-4 bg-transparent border rounded-lg"
-            key={wallet.wallet_address}
+            key={`${wallet.wallet_address}-${wallet.network}`}
           >
             <div className="flex items-center gap-2">
               <span className="flex items-center justify-center rounded-full bg-white p-2">
