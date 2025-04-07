@@ -39,7 +39,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
     }
 
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       (wallet) =>
         wallet.chain?.toLowerCase() === "ethereum" &&
         wallet.wallet_address &&
-        wallet.user_id
+        wallet.user_id,
     );
 
     const walletResults = await Promise.all(
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             acc[network] += token.usd_value;
             return acc;
           },
-          {} as Record<string, number>
+          {} as Record<string, number>,
         );
 
         const networkData = Object.keys(networkAggregation).map((network) => ({
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         }));
 
         return { tokens, networkData };
-      })
+      }),
     );
     const allTokens = walletResults.flatMap((result) => result.tokens);
     const mergedTokens = mergeTokens(allTokens);
@@ -92,12 +92,12 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     const walletDataAggregated = walletResults.flatMap(
-      (result) => result.networkData
+      (result) => result.networkData,
     );
 
     const supabase = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_SERVICE_ROLE_KEY as string
+      process.env.SUPABASE_SERVICE_ROLE_KEY as string,
     );
 
     if (walletDataAggregated.length > 0) {
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           "Content-Type": "application/json",
         },
         status: 200,
-      }
+      },
     );
   } catch (error) {
     console.error("Error in API:", error);
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 async function fetchEVMTokensForAddress(
   address: string,
-  network: { name: string; chain: EvmChain }
+  network: { name: string; chain: EvmChain },
 ): Promise<FormattedTokenBalancePrice[]> {
   try {
     const response = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
@@ -143,7 +143,7 @@ async function fetchEVMTokensForAddress(
 
     const tokens = formatTokenBalancesPrice(response.result, network.name);
     const filteredTokens = tokens.filter(
-      (token) => parseFloat(token.balance) > 0
+      (token) => parseFloat(token.balance) > 0,
     );
     return filteredTokens.map((token) => ({
       ...token,
@@ -152,24 +152,24 @@ async function fetchEVMTokensForAddress(
   } catch (error) {
     console.error(
       `Error fetching tokens for ${address} on ${network.name}:`,
-      error
+      error,
     );
     return [];
   }
 }
 
 async function fetchTokensForEVMAddress(
-  address: string
+  address: string,
 ): Promise<FormattedTokenBalancePrice[]> {
   const promises = EVM_NETWORKS.map((network) =>
-    fetchEVMTokensForAddress(address, network)
+    fetchEVMTokensForAddress(address, network),
   );
   const results = await Promise.all(promises);
   return results.flat();
 }
 
 function mergeTokens(
-  tokens: FormattedTokenBalancePrice[]
+  tokens: FormattedTokenBalancePrice[],
 ): FormattedTokenBalancePrice[] {
   const merged = tokens.reduce(
     (acc, token) => {
@@ -185,7 +185,7 @@ function mergeTokens(
       }
       return acc;
     },
-    {} as { [key: string]: FormattedTokenBalancePrice }
+    {} as { [key: string]: FormattedTokenBalancePrice },
   );
 
   return Object.values(merged);
