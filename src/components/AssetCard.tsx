@@ -45,7 +45,7 @@ export default function AssetCard({
           {loading ? (
             <Skeleton className="w-12 h-12 rounded-full" />
           ) : (
-            <img src={logo} alt={symbol} className="w-12 h-12" />
+            <img src={logo} alt={symbol} className="w-12 h-12 rounded-full" />
           )}
           {loading ? (
             <Skeleton className="w-24 h-6" />
