@@ -11,8 +11,14 @@ import {
   DropdownMenuGroup,
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
-import { ChevronDown, Copy, LogOut } from "lucide-react";
-import { formatAddress } from "@/lib/formatAddress";
+import {
+  ChevronDown,
+  Copy,
+  LayoutDashboard,
+  LogOut,
+  Wallet,
+} from "lucide-react";
+import { formatWalletAddress } from "@/lib/string";
 import { toast } from "sonner";
 import { useWalletStore } from "@/lib/store/useWalletStore";
 
@@ -42,7 +48,7 @@ export default function LoggedMenu() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="group">
           <span>
-            {formatAddress(user?.wallet?.address as string) || "wallet"}
+            {formatWalletAddress(user?.wallet?.address as string) || "wallet"}
           </span>
           <ChevronDown className="ml-2 transition-transform duration-400 group-data-[state=open]:rotate-180" />
         </Button>
@@ -52,16 +58,31 @@ export default function LoggedMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
-            className="cursor-pointer flex items-between"
+            className="cursor-pointer flex"
             onSelect={handleCopy}
           >
             <Copy className="h-4 w-4" />
             <span>Copy address</span>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
           <DropdownMenuItem
-            className="cursor-pointer flex items-between"
-            onSelect={logout}
+            className="cursor-pointer flex"
+            onSelect={() => router.push("/dashboard")}
           >
+            <LayoutDashboard className="h-4 w-4" />
+            <span>Dashboard</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer flex"
+            onSelect={() => router.push("/wallets")}
+          >
+            <Wallet className="h-4 w-4" />
+            <span>Wallets</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem className="cursor-pointer flex" onSelect={logout}>
             <LogOut className="h-4 w-4" />
             <span>Logout</span>
           </DropdownMenuItem>

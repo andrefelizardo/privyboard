@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "generate:types": "npx supabase gen types typescript --project-id ydiwvnubkfudoubczdsa --schema public > database.types.ts"
   },
   "dependencies": {
     "@moralisweb3/common-evm-utils": "^2.27.2",

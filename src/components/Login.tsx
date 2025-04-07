@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useWalletStore } from "@/lib/store/useWalletStore";
+import { QUERY_KEYS } from "@/constants/queryKeys";
+import { fetchWallets } from "@/lib/services/wallets";
+import { fetchCreateUser } from "@/lib/services/user";
 
 export default function LoginContainer() {
   const router = useRouter();
@@ -27,25 +30,22 @@ export default function LoginContainer() {
     },
   });
 
-  const { data: walletsData, isSuccess: walletsSuccess } = useQuery({
-    queryKey: ["wallets", user?.id],
-    queryFn: async () => {
-      const response = await fetch(`/api/wallets/get?query=${user?.id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setOldUser(false);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Bad Request");
-      }
-      return response.json();
-    },
+  const {
+    data: walletsData,
+    isSuccess: walletsSuccess,
+    isFetched,
+  } = useQuery({
+    queryKey: QUERY_KEYS.WALLETS.GET(user?.id as string),
+    queryFn: async () => fetchWallets(user?.id as string),
     refetchOnWindowFocus: false,
     enabled: oldUser && !!user?.wallet?.address,
   });
+
+  useEffect(() => {
+    if (isFetched) {
+      setOldUser(false);
+    }
+  }, [isFetched]);
 
   useEffect(() => {
     if (walletsSuccess && walletsData && walletsData.wallets) {
@@ -56,26 +56,9 @@ export default function LoginContainer() {
   }, [walletsSuccess, walletsData, router, setWallets]);
 
   const { isPending, isSuccess, data, isError } = useQuery({
-    queryKey: ["create-user", user?.id],
-    queryFn: async () => {
-      const response = await fetch("/api/users/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          walletAddress: user?.wallet?.address,
-          id: user?.id,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Bad Request");
-      }
-
-      return response.json();
-    },
+    queryKey: QUERY_KEYS.USER.CREATE(user?.id as string),
+    queryFn: async () =>
+      fetchCreateUser(user?.id as string, user?.wallet?.address as string),
     refetchOnWindowFocus: false,
     enabled: allowCreate && !!user,
   });

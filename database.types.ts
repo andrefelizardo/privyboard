@@ -9,6 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      user_wallet_networks: {
+        Row: {
+          balance: number | null;
+          created_at: string;
+          id: string;
+          network: Database["public"]["Enums"]["wallet_chain"] | null;
+          updated_at: string | null;
+          user_id: string | null;
+          wallet_address: string | null;
+        };
+        Insert: {
+          balance?: number | null;
+          created_at?: string;
+          id?: string;
+          network?: Database["public"]["Enums"]["wallet_chain"] | null;
+          updated_at?: string | null;
+          user_id?: string | null;
+          wallet_address?: string | null;
+        };
+        Update: {
+          balance?: number | null;
+          created_at?: string;
+          id?: string;
+          network?: Database["public"]["Enums"]["wallet_chain"] | null;
+          updated_at?: string | null;
+          user_id?: string | null;
+          wallet_address?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_wallet_networks_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       users: {
         Row: {
           created_at: string;
@@ -32,7 +70,7 @@ export type Database = {
       };
       wallets: {
         Row: {
-          chain: string | null;
+          chain: Database["public"]["Enums"]["wallet_chain"] | null;
           created_at: string;
           id: string;
           is_primary: boolean | null;
@@ -41,7 +79,7 @@ export type Database = {
           wallet_address: string | null;
         };
         Insert: {
-          chain?: string | null;
+          chain?: Database["public"]["Enums"]["wallet_chain"] | null;
           created_at?: string;
           id?: string;
           is_primary?: boolean | null;
@@ -50,7 +88,7 @@ export type Database = {
           wallet_address?: string | null;
         };
         Update: {
-          chain?: string | null;
+          chain?: Database["public"]["Enums"]["wallet_chain"] | null;
           created_at?: string;
           id?: string;
           is_primary?: boolean | null;
@@ -76,7 +114,13 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      wallet_chain:
+        | "bitcoin"
+        | "ethereum"
+        | "fantom"
+        | "solana"
+        | "polygon"
+        | "binance";
     };
     CompositeTypes: {
       [_ in never]: never;

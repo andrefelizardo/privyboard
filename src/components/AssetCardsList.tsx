@@ -1,10 +1,11 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import AssetCard from "./AssetCard";
 import { usePrivy } from "@privy-io/react-auth";
 import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
 import { useWalletStore } from "@/lib/store/useWalletStore";
+import { useEffect } from "react";
 
 const PrivyBoardLogoPath = "/privy-logo.png";
 
@@ -26,7 +27,9 @@ export default function AssetCardsList() {
   const { user } = usePrivy();
   const wallets = useWalletStore((state) => state.wallets);
 
-  const { isPending, isError, data, error } = useQuery({
+  const queryClient = useQueryClient();
+
+  const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ["my-assets", wallets.map((w) => w.wallet_address)],
     queryFn: async () => {
       const response = await fetch(`/api/assets`, {
@@ -46,6 +49,12 @@ export default function AssetCardsList() {
     refetchOnWindowFocus: false,
     enabled: !!user?.wallet?.address && wallets.length > 0,
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      queryClient.setQueryData(["user-wallets", user?.id], data.wallets);
+    }
+  }, [isSuccess, data, queryClient, user?.id]);
 
   if (isPending) {
     return (
