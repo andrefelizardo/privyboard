@@ -58,7 +58,7 @@ export default function LoggedMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
-            className="cursor-pointer flex items-between"
+            className="cursor-pointer flex"
             onSelect={handleCopy}
           >
             <Copy className="h-4 w-4" />
@@ -67,14 +67,14 @@ export default function LoggedMenu() {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
-            className="cursor-pointer flex items-between"
+            className="cursor-pointer flex"
             onSelect={() => router.push("/dashboard")}
           >
             <LayoutDashboard className="h-4 w-4" />
             <span>Dashboard</span>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="cursor-pointer flex items-between"
+            className="cursor-pointer flex"
             onSelect={() => router.push("/wallets")}
           >
             <Wallet className="h-4 w-4" />
@@ -82,10 +82,7 @@ export default function LoggedMenu() {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            className="cursor-pointer flex items-between"
-            onSelect={logout}
-          >
+          <DropdownMenuItem className="cursor-pointer flex" onSelect={logout}>
             <LogOut className="h-4 w-4" />
             <span>Logout</span>
           </DropdownMenuItem>
