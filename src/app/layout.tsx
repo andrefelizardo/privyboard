@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PrivyBoard",
   description: "Dashboard to manager your web3 assets",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -27,9 +28,6 @@ export default function RootLayout({
 }>) {
   return (
     <html className="dark" lang="en">
-      <Head>
-        <link rel="manifest" href="/manifest.json" />
-      </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
