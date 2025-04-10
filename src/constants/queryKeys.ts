@@ -11,7 +11,11 @@ export const QUERY_KEYS = {
     ],
     GET: (userId: string) => ["wallets", userId],
     CREATE: "wallets/create",
-    DELETE: "wallets/delete",
+    REMOVE_WALLET: (userId: string, walletAddress: string) => [
+      "user-wallets/delete",
+      userId,
+      walletAddress,
+    ],
   },
   USER: {
     GET: "users/get",

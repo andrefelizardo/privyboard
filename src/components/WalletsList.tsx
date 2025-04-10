@@ -17,15 +17,44 @@ import {
 } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { MoreVertical } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
+import { useState } from "react";
 
 export default function WalletsList() {
   const { user } = usePrivy();
+  //juntar esses dois estados abaixo em um só
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
 
   const { data, isPending } = useQuery({
     queryKey: QUERY_KEYS.WALLETS.USER_WALLETS(user?.id as string),
     queryFn: async () => fetchUserWallets(user?.id as string),
     refetchOnWindowFocus: false,
     enabled: !!user?.id,
+  });
+
+  const {
+    data: removeData,
+    isPending: isRemovePending,
+    isSuccess: isRemoveSuccess,
+  } = useQuery({
+    queryKey: QUERY_KEYS.WALLETS.REMOVE_WALLET(
+      user?.id as string,
+      walletAddress
+    ),
+    queryFn: async () => fetchUserWallets(user?.id as string),
+    refetchOnWindowFocus: false,
+    enabled: !!user?.id && confirmRemove && !!walletAddress,
   });
 
   if (isPending) {
@@ -80,7 +109,35 @@ export default function WalletsList() {
                         Total value: ${wallet.balance?.toFixed(4)}
                       </p>
                       <Button>Rename wallet</Button>
-                      <Button variant="destructive">Delete wallet</Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive">Remove wallet</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you sure you want to remove this wallet?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will remove the
+                              wallet from your account.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => {
+                                setConfirmRemove(true);
+                                setWalletAddress(
+                                  wallet.wallet_address as string
+                                );
+                              }}
+                            >
+                              Remove
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </SheetContent>
                 </Sheet>

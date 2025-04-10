@@ -33,3 +33,21 @@ export async function fetchWallets(userId: string) {
   }
   return await response.json();
 }
+
+export async function fetchRemoveWallet(userId: string, walletAddress: string) {
+  const response = await fetch(`/api/wallets/user?query=${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      wallet: walletAddress,
+      user_id: userId,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to remove wallet");
+  }
+  return await response.json();
+}
