@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string,
+      process.env.SUPABASE_ANON_KEY as string
     );
 
     const { data: userData, error: userError } = await supabase
@@ -41,10 +41,12 @@ export async function GET(request: NextRequest) {
         },
       });
     }
+
     const { data, error } = await supabase
       .from("user_wallet_networks")
       .select("*")
-      .eq("user_id", userData.id);
+      .eq("user_id", userData.id)
+      .eq("hidden", false);
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {
         status: 500,
