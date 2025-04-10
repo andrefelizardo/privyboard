@@ -39,6 +39,7 @@ export default function WalletsList() {
   return (
     <div className="w-full md:w-4/5 mx-auto px-4 py-12">
       <section className="flex flex-col gap-4">
+        <h1 className="text-3xl font-bold">Wallets: {data.length}</h1>
         {data.map((wallet: Tables<"user_wallet_networks">) => {
           const walletName = `Wallet ${capitalize(wallet.network || "")} ${formatWalletAddress(wallet.wallet_address || "")}`;
 
@@ -51,7 +52,7 @@ export default function WalletsList() {
                 <span className="flex items-center justify-center rounded-full bg-white p-2">
                   <ChainLogo chain={wallet.network} />
                 </span>
-                <span>{walletName}</span>
+                <span>{wallet.name || walletName}</span>
               </div>
 
               <div className="flex">
@@ -71,7 +72,16 @@ export default function WalletsList() {
                         {walletName}
                       </SheetDescription>
                     </SheetHeader>
-                    <div></div>
+                    <div className="flex flex-col gap-6 w-80%">
+                      <span className="flex w-16 h-16 items-center justify-center rounded-full bg-white p-2 m-auto mb-4 mt-4">
+                        <ChainLogo chain={wallet.network} />
+                      </span>
+                      <p className="text-2xl m-auto">
+                        Total value: ${wallet.balance?.toFixed(4)}
+                      </p>
+                      <Button>Rename wallet</Button>
+                      <Button variant="destructive">Delete wallet</Button>
+                    </div>
                   </SheetContent>
                 </Sheet>
               </div>
