@@ -6,6 +6,8 @@ import { usePrivy } from "@privy-io/react-auth";
 import { FormattedTokenBalancePrice } from "@/lib/moralis/formatTokenBalancesPrice";
 import { useWalletStore } from "@/lib/store/useWalletStore";
 import { useEffect } from "react";
+import { QUERY_KEYS } from "@/constants/queryKeys";
+import { fetchAssets } from "@/lib/services/assets";
 
 const PrivyBoardLogoPath = "/privy-logo.png";
 
@@ -30,22 +32,11 @@ export default function AssetCardsList() {
   const queryClient = useQueryClient();
 
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ["my-assets", wallets.map((w) => w.wallet_address)],
-    queryFn: async () => {
-      const response = await fetch(`/api/assets`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ wallets: wallets }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Bad Request");
-      }
-      return response.json();
-    },
+    queryKey: [
+      QUERY_KEYS.ASSETS.MY_ASSETS,
+      wallets.map((w) => w.wallet_address),
+    ],
+    queryFn: async () => fetchAssets(wallets),
     refetchOnWindowFocus: false,
     enabled: !!user?.wallet?.address && wallets.length > 0,
   });
